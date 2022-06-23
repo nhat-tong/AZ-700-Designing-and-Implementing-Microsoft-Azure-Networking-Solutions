@@ -43,7 +43,7 @@ In this section, you will create a virtual network and a subnet.
 
 3. Click **+ Create**.
 
-   ![Create virtual network](../media/create-virtual-network-1.png)
+   ![Create virtual network](../media/create-virtual-network.png)
 
 4. On the **Basics** tab, use the information in the table below to create the virtual network.
 
@@ -82,13 +82,10 @@ In this section, you will create a virtual network and a subnet.
 
 In this section, you will create an internal Standard SKU load balancer. The reason we are creating a Standard SKU load balancer here in the exercise, instead of a Basic SKU load balance, is for later exercises that require a Standard SKU version of the load balancer.
 
-1. On the Azure portal home page, in the search box at the top of the page, type **Load Balancer** and select load balancers under services.
-
-2. Click **Create**.
-
-   ![Create Load Balancer](../media/create-load-balancer-4.png)
-
-3. On the **Basics** tab, use the information in the table below to create the load balancer.
+1.  On the Azure home page, in the search bar, enter **Load Balancer** 
+2.  Select **Create Load Balancer**.
+3.  On the **Basics** tab, use the information in the table below to create the load balancer.
+    
 
    | **Setting**           | **Value**                |
    | --------------------- | ------------------------ |
@@ -100,6 +97,7 @@ In this section, you will create an internal Standard SKU load balancer. The rea
    | SKU                   | **Standard**             |
    | Type                  | **Internal**             |
    | Frontend IP configuration tab | + Add a frontend IP configuration |
+   | Name                  | **LoadBalancerFrontEnd** |
    | Virtual network       | **IntLB-VNet**           |
    | Subnet                | **myBackendSubnet**      |
    | IP address assignment | **Dynamic**              |
@@ -189,7 +187,7 @@ In this section, you will create three VMs, that will be in the same availabilit
 
 1. In the Azure portal, open the **PowerShell** session within the **Cloud Shell** pane.
 
-2. In the toolbar of the Cloud Shell pane, click the Upload/Download files icon, in the drop-down menu, click Upload and upload the following files **azuredeploy.json**, **azuredeploy.parameters.vm1.json**, **azuredeploy.parameters.vm2.json** and **azuredeploy.parameters.vm3.json** into the Cloud Shell home directory from the source folder **F:\Allfiles\Exercises\M08**.
+2. In the toolbar of the Cloud Shell pane, click the Upload/Download files icon, in the drop-down menu, click Upload and upload the following files **azuredeploy.json**, **azuredeploy.parameters.vm1.json**, **azuredeploy.parameters.vm2.json** and **azuredeploy.parameters.vm3.json** into the Cloud Shell home directory one by one from the source folder **F:\Allfiles\Exercises\M08**.
 
 3. Deploy the following ARM templates to create the virtual network, subnets, and VMs needed for this exercise:
 

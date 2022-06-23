@@ -16,7 +16,7 @@ For Azure to communicate between the resources that you create, it needs a virtu
 In this exercise, you will:
 
 + Task 1: Create an application gateway
-+ Task 2: Add backend targets
++ Task 2: Create virtual machines
 + Task 3: Add backend servers to backend pool
 + Task 4: Test the application gateway
 
@@ -91,7 +91,7 @@ In this exercise, you will:
 
 19. Accept the default values for the other settings on the **Listener** tab.
 
-    ![Azure Portal add an Application Gateway routing rule](../media/routing-rule-listener-tab.png)
+    ![Azure Portal add an Application Gateway routing rule](../media/Routing-rule-listener-tab.png)
 
 20. Select the **Backend targets** tab to configure the rest of the routing rule.
 
@@ -100,7 +100,7 @@ In this exercise, you will:
     | **Setting**   | **Value**      |
     | ------------- | -------------- |
     | Target type   | Backend pool   |
-    | HTTP Settings | **Create new** |
+    | HTTP Settings | **Add new** |
 
 22. In **Add a HTTP setting**, enter or select the following information:
 
@@ -121,65 +121,23 @@ In this exercise, you will:
 
 It may take several minutes for Azure to create the application gateway. Wait until the deployment finishes successfully before moving on to the next section.
 
-## Task 2: Add backend targets
+## Task 2: Create virtual machines
 
-In this example, you'll use virtual machines as the target backend. You'll create two virtual machines as backend servers for the application gateway.
+1. In the Azure portal, open the **PowerShell** session within the **Cloud Shell** pane.
 
-To do this, you'll:
+2. In the toolbar of the Cloud Shell pane, select the Upload/Download files icon, in the drop-down menu, select Upload and upload the following files **backend.json** and **backend.parameters.json** into the Cloud Shell home directory one by one from the source folder **F:\Allfiles\Exercises\M05**.
 
-- Create two new VMs, BackendVM1 and BackendVM2, to be used as backend servers.
+3. Deploy the following ARM templates to create the VMs needed for this exercise:
 
-- Install IIS on the virtual machines to verify that the application gateway was created successfully.
+   ```powershell
+   $RGName = "ContosoResourceGroup"
+   
+   New-AzResourceGroupDeployment -ResourceGroupName $RGName -TemplateFile backend.json -TemplateParameterFile backend.parameters.json
+   ```
+  
+4. When the deployment is complete, go to the Azure portal home page, and then select **Virtual Machines**.
 
-- Add the backend servers to the backend pool.
-
-### Create virtual machines
-
-1. On any Azure Portal page, in **Search resources, services and docs (G+/)**, enter virtual machine, and then select **Virtual machines** from the results. 
-
-2. On the Virtual machines page, select **+ Create** > **+ Virtual machine**.
-
-3. In **Create a virtual machine**, enter, or select the following information (If the setting is not listed, use the default value):
-
-   | **Setting**          | **Value**                                        |
-   | -------------------- | ------------------------------------------------ |
-   | **Basics** tab       |                                                  |
-   | Subscription         | Select your subscription.                        |
-   | Resource group       | Select ContosoResourceGroup                      |
-   | Virtual machine name | BackendVM1                                       |
-   | Image                | Select **Windows Server 2022 Datacenter- Gen1**  |
-   | Username             | TestUser                                         |
-   | Password             | TestPa$$w0rd                                     |
-   | Public inbound ports | None                                             |
-   | **Networking**       |                                                  |
-   | Virtual network      | ContosoVnet                                      |
-   | Subnet               | BackendSubnet (10.0.1.0/24)                      |
-   | **Management**       |                                                  |
-   | Boot diagnostics     | Disable                                          |
-
-4. Accept the other defaults and then select **Review + create**.
-
-5. On the **Review + create** tab, review the settings, correct any validation errors, and then select **Create**.
-
-Wait for the virtual machine creation to complete before continuing.
-
-### Install IIS for testing
-
-In this example, you install IIS on the virtual machines to verify Azure created the application gateway successfully.
-
-1. Open Azure PowerShell.
-
-2. Select **Cloud Shell** from the top navigation bar of the Azure portal and then select **PowerShell** from the drop-down list.
-
-   ![Azure Portal and Azure PowerShell Install IIS on backends](../media/application-gateway-extension.png)
-
-3. Run the following command to install IIS on the virtual machine. Change the Location parameter if necessary:
-
-```Azure PowerShell
-Set-AzVMExtension  -ResourceGroupName ContosoResourceGroup  -ExtensionName IIS  -VMName BackendVM1  -Publisher Microsoft.Compute  -ExtensionType CustomScriptExtension  -TypeHandlerVersion 1.4  -SettingString '{"commandToExecute":"powershell Add-WindowsFeature Web-Server; powershell Add-Content -Path \"C:\\inetpub\\wwwroot\\Default.htm\" -Value $($env:computername)"}'  -Location EastUS
-```
-
-4. Create a second virtual machine and install IIS by using the Create virtual machines and Install IIS for testing steps that you previously completed. Use BackendVM2 for the virtual machine name and for the **VMName** setting of the **Set-AzVMExtension** cmdlet.
+5. Verify that both virtual machines have been created.
 
 ## Task 3: Add backend servers to backend pool
 

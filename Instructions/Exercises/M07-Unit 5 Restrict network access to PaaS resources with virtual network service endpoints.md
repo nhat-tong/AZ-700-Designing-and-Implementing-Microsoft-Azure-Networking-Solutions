@@ -95,7 +95,7 @@ By default, all VMs in a subnet can communicate with all resources. You can limi
 2. In Network security groups, select **+ Create**. 
 
 3. Enter or select, the following information: 
-   ![Graphical user interface, text, application Description automatically generated](../media/create-network-security-group.png)
+
 
    | **Setting**    | **Value**                                                    |
    | -------------- | ------------------------------------------------------------ |
@@ -107,7 +107,6 @@ By default, all VMs in a subnet can communicate with all resources. You can limi
 4. select **Review + create**, then click **Create**:
 
 5. After the ContosoPrivateNSG network security group is created, select **Go to resource**.
-   ![Graphical user interface, text, application, email Description automatically generated](../media/nsg-deployment-complete.png)
 
 6. Under **Settings**, select **Outbound security rules**.
 
@@ -118,7 +117,8 @@ By default, all VMs in a subnet can communicate with all resources. You can limi
 
    | **Setting**             | **Value**                 |
    | ----------------------- | ------------------------- |
-   | Source                  | Select **VirtualNetwork** |
+   | Source                  | Select **Service Tag**    |
+   | Source service tag      | Select **VirtualNetwork** |
    | Source port ranges      | *                         |
    | Destination             | Select **Service Tag**    |
    | Destination service tag | Select **Storage**        |
@@ -200,7 +200,7 @@ The steps necessary to restrict network access to resources created through Azur
 2. Select +Create.
 
 3. Enter, or select, the following information and accept the remaining defaults:
-   ![Graphical user interface, text, application, email Description automatically generated](../media/create-a-storage-account-basics.png)
+
 
    | **Setting**    | **Value**                                                    |
    | -------------- | ------------------------------------------------------------ |
@@ -252,51 +252,20 @@ By default, storage accounts accept network connections from clients in any netw
 
 To test network access to a storage account, deploy a VM to each subnet.
 
-1. In the Azure portal Home screen, select Virtual machinesSelect **+ Create**, then **+Virtual machine**.
+1. In the Azure portal, open the **PowerShell** session within the **Cloud Shell** pane.
 
-2. On the Basics tab, enter, or select, the following information: 
-   ![Graphical user interface, text, application, email Description automatically generated](../media/create-virtual-machine-basics.png)
+2. In the toolbar of the Cloud Shell pane, select the Upload/Download files icon, in the drop-down menu, select Upload and upload the following files **VMs.json** and **VMs.parameters.json** into the Cloud Shell home directory one by one from the source folder **F:\Allfiles\Exercises\M07**.
 
-   | **Setting**           | **Value**                                                    |
-   | --------------------- | ------------------------------------------------------------ |
-   | Project Details       |                                                              |
-   | Subscription          | Select your subscription.                                    |
-   | Resource group        | myResourceGroup                                              |
-   | Instance Details      |                                                              |
-   | Virtual machine name  | ContosoPublic                                            |
-   | Region                | (US) East US                                                 |
-   | Availability Options  | No infrastructure redundancy required                        |
-   | Image                 | Select **Windows Server 2019 Datacenter**.                   |
-   | Size                  | Standard_D2s                                                 |
-   | Administrator Account |                                                              |
-   | Username              | Enter a user name of your choosing.                          |
-   | Password              | Enter a password of your choosing.                           |
-   | Confirm Password      | Re-enter the password.                                       |
-   | Inbound port rules    |                                                              |
-   | Public inbound ports  | Allow selected ports                                         |
-   | Select inbound ports  | RDP (3389)                                                   |
+3. Deploy the following ARM templates to create the VMs needed for this exercise:
 
-3. Then select the **Networking** tab. Enter, or select, the following information:
-   ![Graphical user interface, application, email Description automatically generated](../media/create-virtual-machine-networking.png)
+   ```powershell
+   $RGName = "myResourceGroup"
+   
+   New-AzResourceGroupDeployment -ResourceGroupName $RGName -TemplateFile VMs.json -TemplateParameterFile VMs.parameters.json
+   ```
+  
+4. When the deployment is complete, go to the Azure portal home page, and then select **Virtual Machines**.
 
-   | **Setting**                | **Value**                  |
-   | -------------------------- | -------------------------- |
-   | Virtual network            | CoreServicesVNet           |
-   | Subnet                     | Public (10.0.0.0/24)       |
-   | Public IP                  | (new) ContosoPublic-ip |
-   | NIC network security group | Basic                      |
-   | Public inbound ports       | Allow selected ports       |
-   | Select inbound ports       | RDP (3389)                 |
-
-4. Click **Review + create**.
-
-5. Select **Create** to start the virtual machine deployment. The VM takes a few minutes to deploy, but you can continue to the next step while the VM is creating.
-
-6. Create another virtual machine Complete steps 2-5 again, but name the virtual machine ContosoPrivate and and select the **Private** subnet.
-
-The VM takes a few minutes to deploy. Do not continue to the next step until it finishes creating and its settings open in the portal.
-
- 
 
 ## Task 10: Confirm access to storage account
 
@@ -308,12 +277,14 @@ The VM takes a few minutes to deploy. Do not continue to the next step until it 
 5. You may receive a certificate warning during the sign-in process. If you receive the warning, select Yes or Continue to proceed with the connection.
 6. On the ContosoPrivate VM, map the Azure file share to drive Z using PowerShell. Before running the commands that follow, replace <storage-account-key> , <storage-account-name> (i.e. contosostoragexx) and my-file-share (i.e marketing) with values you supplied and retrieved in the Create a storage account task.
 
-```Azure CLI
+
+```azurecli
 $acctKey = ConvertTo-SecureString -String "<storage-account-key>" -AsPlainText -Force
 
 $credential = New-Object System.Management.Automation.PSCredential -ArgumentList "Azure\<storage-account-name>", $acctKey
 
 New-PSDrive -Name Z -PSProvider FileSystem -Root "\\<storage-account-name>.file.core.windows.net\marketing" -Credential $credential
+
 ```
 
 The Azure file share successfully mapped to the Z drive.

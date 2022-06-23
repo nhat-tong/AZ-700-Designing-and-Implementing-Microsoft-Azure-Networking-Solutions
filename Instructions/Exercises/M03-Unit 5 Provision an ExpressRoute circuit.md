@@ -9,7 +9,6 @@ In this exercise, you will create an ExpressRoute circuit using the Azure portal
 
 ![Diagram ExpressRoute circuit layout for exercise](../media/environment-diagram.png)
 
-To watch a demonstration of how to create an ExpressRoute circuit, see [Azure ExpressRoute - How to create an ExpressRoute circuit | Azure | Channel 9 (msdn.com)](https://channel9.msdn.com/Blogs/Azure/Azure-ExpressRoute-How-to-create-an-ExpressRoute-circuit?term=ExpressRoute&lang-en=true&pageSize=15&skip=15).
 
 
 In this exercise, you will:
@@ -37,6 +36,11 @@ In this exercise, you will:
 3. On the **Create ExpressRoute** page, provide the **Resource Group**, **Region**, and **Name** for the circuit with the following: ExpressRouteResourceGroup, East US 2, TestERCircuit. Then select **Next: Configuration &gt;**.
 
 4. When you are filling in the values on this page, make sure that you specify the correct SKU tier (Local, Standard, or Premium) and data metering billing model (Unlimited or Metered).
+
+5. Select **Review + Create**.
+
+6. Confirm that the ExpressRoute configuration passes validation and then select **Create**.
+
 
 ![Azure portal - Create ExpressRoute configuration tab](../media/expressroute-create-configuration.png)
 

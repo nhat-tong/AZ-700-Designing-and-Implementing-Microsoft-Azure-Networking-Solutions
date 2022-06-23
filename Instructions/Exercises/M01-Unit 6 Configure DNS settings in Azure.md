@@ -4,7 +4,7 @@ Exercise:
     module: 'Module - Introduction to Azure Virtual Networks'
 ---
 
-# M01 - Unit 6 Configure DNS settings in azure
+# M01 - Unit 6 Configure DNS settings in Azure
 
 ## Exercise scenario 
 In this unit, you will configure DNS name resolution for Contoso Ltd. You will create a private DNS zone named contoso.com, link the VNets for registration and resolution, and then create two virtual machines and test the configuration.
@@ -100,8 +100,10 @@ In this exercise, you will:
 In this section, you will create two test VMs to test the Private DNS zone configuration.
 
 1. In the Azure portal, open the **PowerShell** session within the **Cloud Shell** pane.
+    
+    > **Note:** If this is the first time opening Cloud Shell, you might be prompted to create a storage account. Select **Create storage**.
 
-2. In the toolbar of the Cloud Shell pane, click the Upload/Download files icon, in the drop-down menu, click Upload and upload the following files **azuredeploy.json** and **azuredeploy.parameters.json** into the Cloud Shell home directory from the source folder **F:\Allfiles\Exercises\M01**.
+2. In the toolbar of the Cloud Shell pane, select the Upload/Download files icon, in the drop-down menu, select Upload and upload the following files **azuredeploy.json** and **azuredeploy.parameters.json** into the Cloud Shell home directory one by one from the source folder **F:\Allfiles\Exercises\M01**.
 
 3. Deploy the following ARM templates to create the VMs needed for this exercise:
 

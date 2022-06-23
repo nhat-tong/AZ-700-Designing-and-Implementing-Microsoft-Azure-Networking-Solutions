@@ -90,49 +90,25 @@ In this task, you will create a single virtual network with two subnets.
 
 In this task, you will create the workload virtual machine and place it in the Workload-SN subnet created previously.
 
-1. On the Azure portal home page, in the search box, type **virtual machine** and select **Virtual machine** when it appears.
+1. In the Azure portal, open the **PowerShell** session within the **Cloud Shell** pane.
 
-2. On the **Virtual machine** page, click **Create**.
+2. In the toolbar of the Cloud Shell pane, select the Upload/Download files icon, in the drop-down menu, select Upload and upload the following files **firewall.json** and **firewall.parameters.json** into the Cloud Shell home directory one by one from the source folder **F:\Allfiles\Exercises\M06**.
 
-3. On the **Basics** tab, create a new VM using the information in the table below.
+3. Deploy the following ARM templates to create the VM needed for this exercise:
 
-   | **Setting**          | **Value**                                                    |
-   | -------------------- | ------------------------------------------------------------ |
-   | Subscription         | Select your subscription                                     |
-   | Resource group       | **Test-FW-RG**                                               |
-   | Virtual machine name | **Srv-Work**                                                 |
-   | Region               | Your region                                                  |
-   | Availability options | **No infrastructure redundancy required**                    |
-   | Image                | **Windows Server 2022 Datacenter- Gen1**                     |
-   | Size                 | **Standard_D2s_v3** - 2vcpus, 8GiB memory                    |
-   | Username             | **MyAdmin**                                                  |
-   | Password             | **TestPa$$w0rd!**                                            |
-   | Confirm password     | **TestPa$$w0rd!**                                            |
-   | Public inbound ports | Select **None**                                              |
+   ```powershell
+   $RGName = "Test-FW-RG"
+   
+   New-AzResourceGroupDeployment -ResourceGroupName $RGName -TemplateFile firewall.json -TemplateParameterFile firewall.parameters.json
+   ```
+  
+4. When the deployment is complete, go to the Azure portal home page, and then select **Virtual Machines**.
 
+5. Verify that the virtual machine has been created.
 
-   ![Create a virtual machine - Basics tab](../media/create-vm-for-azure-firewall-test-basics.png)
+6. When deployment of the VM completes, select **Go to resource**.
 
-4. Click **Next : Disks**.
-
-5. Click **Next : Networking**.
-
-6. Ensure that **Test-FW-VN** is selected for the virtual network and the subnet is **Workload-SN**.
-
-7. For **Public IP**, select **None**.
-
-8. Click **Next : Management**.
-
-9. Under **Monitoring**, set **Boot diagnostics** to **Disable**.
-
-10. Click **Review + create**.
-
-11. Click **Create**.
-
-12. When deployment of the VM completes, click **Go to resource**.
-
-13. On the **Overview** page of **Srv-Work**, on the right of the page under **Networking**, take a note of the **Private IP address** for this VM (e.g., **10.0.2.4**).
-
+7. On the **Overview** page of **Srv-Work**, on the right of the page under **Networking**, take a note of the **Private IP address** for this VM (e.g., **10.0.2.4**).
  
 
 ## Task 4: Deploy the firewall and firewall policy
@@ -149,7 +125,7 @@ In this task, you will deploy the firewall into the virtual network with a firew
    | -------------------- | ------------------------------------------------------------ |
    | Subscription         | Select your subscription                                     |
    | Resource group       | **Test-FW-RG**                                               |
-   | Virtual machine name | **Test-FW01**                                                |
+   | Firewall name        | **Test-FW01**                                                |
    | Region               | Your region                                                  |
    | Firewall tier        | **Standard**                                                 |
    | Firewall management  | **Use a Firewall Policy to manage this firewall**            |
@@ -228,7 +204,7 @@ In this task, on the Workload-SN subnet, you will configure the outbound default
 
 15. In **Next hop address**, type the private IP address for the firewall that you noted previously (e.g., **10.0.1.4**)
 
-16. Click **OK**.
+16. Click **Add**.
 
     ![Add firewall route](../media/add-firewall-route.png)
 
@@ -371,7 +347,7 @@ In this final task, you will test the firewall to verify that the rules are conf
 
 2. In the **Computer** box, enter the firewall's public IP address (e.g., **20.90.136.51**) followed by **:3389** (e.g., **20.90.136.51:3389**).
 
-3. In the **Username** box, enter **MyAdmin**.
+3. In the **Username** box, enter **TestUser**.
 
 4. Click **Connect**.
 

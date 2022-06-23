@@ -1,14 +1,15 @@
+
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-       "vmName": {
+       "vmName1": {
          "type": "string",
          "metadata": {
               "description": "description"
           }
       },
-      "nicName": {
+      "nicName1": {
          "type": "string",
          "metadata": {
               "description": "description"
@@ -16,7 +17,7 @@
       },
       "vmSize": {
         "type": "string",
-        "defaultValue": "Standard_DS1_v2",
+        "defaultValue": "Standard_D2s_v3",
         "metadata": {
           "description": "Virtual machine size"
         }
@@ -35,25 +36,25 @@
       }
     },
   "variables": {
-    "virtualNetworkName": "IntLB-VNet",
-    "nsgName": "myNSG",
-    "subnetName": "myBackendSubnet",
+    "virtualNetworkName": "MyVirtualNetwork",
+    "subnetName": "default",
+    "nsgName1": "MyVirtualMachine-nsg",
     "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
     "computeApiVersion": "2018-06-01",
     "networkApiVersion": "2018-08-01"
   },
     "resources": [
         {
-            "name": "[parameters('vmName')]",
+            "name": "[parameters('vmName1')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[variables('computeApiVersion')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[parameters('nicName')]"
+                "[parameters('nicName1')]"
             ],
             "properties": {
                 "osProfile": {
-                    "computerName": "[parameters('vmName')]",
+                    "computerName": "[parameters('vmName1')]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]",
                     "windowsConfiguration": {
@@ -81,64 +82,17 @@
                             "properties": {
                                 "primary": true
                             },
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('nicName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('nicName1'))]"
                         }
-                    ]
-                }
-            },
-            "resources": [
-          {
-            "apiVersion": "2018-06-01",
-            "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('vmName'),'/', 'VMConfig')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/',parameters('vmName'))]"
-            ],
-            "properties": {
-                "publisher": "Microsoft.Compute",
-                "type": "CustomScriptExtension",
-                "typeHandlerVersion": "1.7",
-                "autoUpgradeMinorVersion":true,
-                "settings": {
-                    "fileUris": [
-                       "https://raw.githubusercontent.com/MicrosoftLearning/AZ-700-Designing-and-Implementing-Microsoft-Azure-Networking-Solutions/master/Allfiles/Exercises/M08/install-iis.ps1"
                     ],
-                    "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File install-iis.ps1"
+                  "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName1'))]"
+                }
                 }
             }
-        }
-        ]
-            
-        },
-        {
-            "name": "[parameters('nicName')]",
-            "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "[variables('networkApiVersion')]",
-            "location": "[resourceGroup().location]",
-            "comments": "Primary NIC",
-            "dependsOn": [
-                "[variables('nsgName')]"
-            ],
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "subnet": {
-                                "id": "[variables('subnetRef')]"
-                            },
-                            "privateIPAllocationMethod": "Dynamic"
-                        }
-                    }
-                ],
-                "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
-                }
-            }
-        },
-        {
-            "name": "[variables('nsgName')]",
+            },
+       {
+            "name": "[variables('nsgName1')]",
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[resourceGroup().location]",
@@ -156,6 +110,29 @@
                             "direction": "Inbound",
                             "sourcePortRange": "*",
                             "destinationAddressPrefix": "*"
+                        }
+                    }
+                ]
+            }
+        },
+         
+        {
+            "name": "[parameters('nicName1')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[variables('networkApiVersion')]",
+            "location": "[resourceGroup().location]",
+            "comments": "Primary NIC",
+            "dependsOn": [
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic"
                         }
                     }
                 ]

@@ -77,9 +77,9 @@ In this section, you will create three VMs, that will be in the same availabilit
 
 1. In the Azure portal, open the **PowerShell** session within the **Cloud Shell** pane.
 
-2. In the toolbar of the Cloud Shell pane, click the Upload/Download files icon, in the drop-down menu, click Upload and upload the following files azuredeploy.json, azuredeploy.parameters.vm1.json, azuredeploy.parameters.vm2.json and azuredeploy.parameters.vm3.json into the Cloud Shell home directory.
+2. In the toolbar of the Cloud Shell pane, click the Upload/Download files icon, in the drop-down menu, click Upload and upload the following files azuredeploy.json, azuredeploy.parameters.vm1.json, azuredeploy.parameters.vm2.json and azuredeploy.parameters.vm3.json into the Cloud Shell home directory one by one.
 
-3. Deploy the following ARM templates to create the virtual network, subnets, and VMs needed for this exercise:
+3. Deploy the following ARM templates to create the VMs needed for this exercise:
 
    ```powershell
    $RGName = "IntLB-RG"
@@ -88,6 +88,8 @@ In this section, you will create three VMs, that will be in the same availabilit
    New-AzResourceGroupDeployment -ResourceGroupName $RGName -TemplateFile azuredeploy.json -TemplateParameterFile azuredeploy.parameters.vm2.json
    New-AzResourceGroupDeployment -ResourceGroupName $RGName -TemplateFile azuredeploy.json -TemplateParameterFile azuredeploy.parameters.vm3.json
    ```
+
+It may take 5-10 min to create these three VMs. You do not have to wait until this job completes, you can continue with the next task already.
 
 ## Task 3: Create the load balancer
 
@@ -100,7 +102,6 @@ In this section, you will create an internal Standard SKU load balancer. The rea
 3. On the results page, locate and select **Load Balancer** (the one that says 'Microsoft' and 'Azure Service' under the name).
 
 4. Click **Create**.
-   ![Picture 3](../media/create-load-balancer-4.png)
 
 5. On the **Basics** tab, use the information in the table below to create the load balancer.
 
@@ -116,7 +117,7 @@ In this section, you will create an internal Standard SKU load balancer. The rea
 
 6. Click **Next: Frontend IP configurations**.
 7. Click Add a frontend IP
-8. On the **Add frontend IP address** blade, enter the information from the table below.
+8. On the **Add frontend IP address** blade, enter the information from the table below and select **Add**.
  
    | **Setting**     | **Value**                |
    | --------------- | ------------------------ |
@@ -219,7 +220,7 @@ In this section, you will create a test VM, and then test the load balancer.
 
 ### Create test VM
 
-1. On the Azure portal home page, click **Create a resource**, then **Compute**, then select **Virtual machine** (if this resource type is not listed on the page, use the search box at the top of the page to search for it and select it).
+1. On the Azure portal home page, click **Create a resource**, then **virtual**, then select **Virtual machine** (if this resource type is not listed on the page, use the search box at the top of the page to search for it and select it).
 
 2. On the **Create a virtual machine** page, on the **Basics** tab, use the information in the table below to create the first VM.
 
@@ -230,7 +231,7 @@ In this section, you will create a test VM, and then test the load balancer.
    | Virtual machine name | **myTestVM**                                 |
    | Region               | **(US) East US**                             |
    | Availability options | **No infrastructure redundancy required**    |
-   | Image                | **Windows Server 2019 Datacenter - Gen 1**   |
+   | Image                | **Windows Server 2019 Datacenter - Gen 2**   |
    | Size                 | **Standard_DS2_v3 - 2 vcpu, 8 GiB memory** |
    | Username             | **TestUser**                                 |
    | Password             | **TestPa$$w0rd!**                            |
@@ -269,7 +270,7 @@ In this section, you will create a test VM, and then test the load balancer.
 
 5. Click **Use Bastion**.
 
-6. In the **Username** box, type **TestUser** and in the **Password** box, type **TestPa$$w0rd!**, then click **Connect**.
+6. In the **Username** box, type **TestUser** and in the **Password** box, type **TestPa$$w0rd!**, then click **Connect**. If popup blocker is preventing the new window, allow popup blocker and **Connect** again.
 
 7. The **myTestVM** window will open in another browser tab.
 
